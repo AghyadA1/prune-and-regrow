@@ -65,6 +65,9 @@ tr:last-child td{border-bottom:0}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.25rem;align-items:start}
 @media (max-width:820px){.two{grid-template-columns:1fr}}
 .cap{font-size:.92rem;color:var(--muted)}
+.mdesc{margin:.15rem 0 .1rem;padding:.6rem .85rem;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:6px;font-size:.95rem}
+.mdesc b{font-family:var(--display)}
+.mdesc .v{font-family:var(--mono);font-size:.82rem;color:var(--muted);display:block;margin-top:.2rem}
 .refs{padding-left:1.2rem;display:grid;gap:.4rem;font-size:.95rem}
 .risk{display:grid;gap:.8rem}
 .risk div{border-left:3px solid var(--warn);padding-left:.9rem}
@@ -111,19 +114,8 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
 <header class="col" style="display:grid;gap:.8rem">
   <div class="eyebrow">Research notes · structured pruning × neuroevolution</div>
   <h1>Prune and Regrow</h1>
-  <p class="lede">Find the parts of a trained network that carry little information, then swap each one for a tiny subnetwork grown from a single node. Here is what the literature already covers, what looks new, how to measure “importance” from inputs, and a working toy run.</p>
+  <p class="lede">One trained digits network (3,466 parameters, 97.7%), shrunk five different ways and shown in 3D. <b>Classic pruning only removes</b> weights or neurons. <b>The NEAT methods also grow new neurons</b> that take over the work of the ones they replace. Pick a method below and press Play.</p>
 </header>
-
-<section class="verdict">
-  <h2 style="font-size:1.25rem">Short answer</h2>
-  <ul>
-    <li><b>Each piece exists on its own.</b> Scoring neurons by entropy or by their effect on the output, clustering neurons into modules, replacing a block of a trained network with a cheaper one, and growing networks from one unit are all published.</li>
-    <li><b>The combination looks new.</b> I did not find a paper that picks a low-information region of a trained network and replaces it with a NEAT-style topology grown to imitate that region. The closest are <a href="https://arxiv.org/abs/1906.04113" target="_blank" rel="noopener">BlockSwap</a> (swap blocks for cheaper fixed designs) and <a href="https://arxiv.org/abs/1911.13053" target="_blank" rel="noopener">block-wise distillation NAS</a> (search a replacement per block). Neither grows the replacement from nothing. Absence of evidence is not proof; this was a careful but not exhaustive search.</li>
-    <li><b>The key change I'd make:</b> split “importance” from “replaceability”. A part that barely affects the output should just be deleted or frozen to a constant. Growing a small network pays off for parts that <i>do</i> matter but compute something simple.</li>
-    <li><b>Tested against classic pruning, the improved version wins at small sizes.</b> The first NEAT version lost by about 2 points. NEAT-merge, where one grown neuron replaces several old ones and the neurons that stay are re-fitted to take over their work, keeps 96.5% accuracy at about 460 parameters, where deleting small weights keeps 85.6%. Most of that gain comes from the re-fitting; growing new neurons helps most at the very smallest size. Letting NEAT add new hidden layers did not shrink it further. Details and the 3D replay are below.</li>
-    <li><b>Your instinct about inputs is right.</b> Score parts by what happens to the output when you perturb them over many inputs. Training-history signals exist (and work), but they describe the path the optimizer took, not what the finished network uses.</li>
-  </ul>
-</section>
 
 <section class="viz" aria-labelledby="v-h">
   <div class="viz-head">
@@ -141,6 +133,7 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
       <button id="m-merge" data-m="merge" aria-pressed="true">NEAT-merge</button>
       <button id="m-deep" data-m="deep" aria-pressed="false">NEAT-deep (new layers)</button>
     </div>
+    <p class="mdesc" id="m-desc" aria-live="polite"></p>
     <div class="row">
       <button id="v-play" class="primary">Play</button>
       <div class="seg rounds" id="rounds" role="group" aria-label="Jump to round"></div>
@@ -169,6 +162,17 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
   <p class="hint">Touchpad: two-finger scroll turns the network, pinch zooms, shift + scroll pans. Mouse: drag to turn, shift-drag or right-drag to pan. Hover a node to read its numbers.</p>
 </section>
 
+<section class="verdict">
+  <h2 style="font-size:1.25rem">Key findings</h2>
+  <ul>
+    <li><b>Each piece exists on its own.</b> Scoring neurons by entropy or by their effect on the output, clustering neurons into modules, replacing a block of a trained network with a cheaper one, and growing networks from one unit are all published.</li>
+    <li><b>The combination looks new.</b> I did not find a paper that picks a low-information region of a trained network and replaces it with a NEAT-style topology grown to imitate that region. The closest are <a href="https://arxiv.org/abs/1906.04113" target="_blank" rel="noopener">BlockSwap</a> (swap blocks for cheaper fixed designs) and <a href="https://arxiv.org/abs/1911.13053" target="_blank" rel="noopener">block-wise distillation NAS</a> (search a replacement per block). Neither grows the replacement from nothing. Absence of evidence is not proof; this was a careful but not exhaustive search.</li>
+    <li><b>The key change I'd make:</b> split “importance” from “replaceability”. A part that barely affects the output should just be deleted or frozen to a constant. Growing a small network pays off for parts that <i>do</i> matter but compute something simple.</li>
+    <li><b>Tested against classic pruning, the improved version wins at small sizes.</b> The first NEAT version lost by about 2 points. NEAT-merge, where one grown neuron replaces several old ones and the neurons that stay are re-fitted to take over their work, keeps 96.5% accuracy at about 460 parameters, where deleting small weights keeps 85.6%. Most of that gain comes from the re-fitting; growing new neurons helps most at the very smallest size. Letting NEAT add new hidden layers did not shrink it further. Details and the 3D replay are below.</li>
+    <li><b>Measure importance from inputs.</b> Score parts by what happens to the output when you perturb them over many inputs. Training-history signals exist (and work), but they describe the path the optimizer took, not what the finished network uses.</li>
+  </ul>
+</section>
+
 <section class="fig" aria-labelledby="cmp-h">
   <div class="two">
     <div style="min-width:0">
@@ -190,7 +194,7 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
   <h3>Every criterion I tried</h3>
 <p class="cap" style="max-width:46rem">Each NEAT-merge row adds one change to the row above it, and the second group tests new layers. All use the same criterion and the same re-fitting; each cell shows mean test accuracy over 3 seeds, then the mean parameter count in grey. The look-ahead variant and NEAT-deep each have a button in the 3D view.</p>
 <div class="tbl"><table class="var"><thead><tr><th>Variant</th><th>Round 3</th><th>Round 4</th><th>Round 5</th><th>Round 6</th></tr></thead><tbody>
-<tr><td><b>Merge only</b><div class="sub">A new neuron replaces several old ones; only grown neurons can be deleted. Closest to your original idea.</div></td><td class="num">95.2% <span class="sub">707</span></td><td class="num">93.0% <span class="sub">431</span></td><td class="num">85.9% <span class="sub">239</span></td><td class="num">60.1% <span class="sub">118</span></td></tr>
+<tr><td><b>Merge only</b><div class="sub">A new neuron replaces several old ones; only grown neurons can be deleted. Closest to the original idea.</div></td><td class="num">95.2% <span class="sub">707</span></td><td class="num">93.0% <span class="sub">431</span></td><td class="num">85.9% <span class="sub">239</span></td><td class="num">60.1% <span class="sub">118</span></td></tr>
 <tr><td><b>+ delete</b><div class="sub">Any neuron, old or new, can also be deleted.</div></td><td class="num">95.6% <span class="sub">721</span></td><td class="num">92.0% <span class="sub">428</span></td><td class="num">86.7% <span class="sub">273</span></td><td class="num">71.5% <span class="sub">139</span></td></tr>
 <tr><td><b>+ trim links</b><div class="sub">The weakest 10% of links in a layer can also be cut.</div></td><td class="num">97.2% <span class="sub">724</span></td><td class="num">96.2% <span class="sub">453</span></td><td class="num">93.8% <span class="sub">277</span></td><td class="num">88.9% <span class="sub">160</span></td></tr>
 <tr><td><b>+ ReLU-aware</b><div class="sub">New neurons are fitted through their ReLU and keep only their strongest outputs.</div></td><td class="num">97.3% <span class="sub">711</span></td><td class="num">96.5% <span class="sub">453</span></td><td class="num">95.3% <span class="sub">276</span></td><td class="num">87.2% <span class="sub">152</span></td></tr>
@@ -229,15 +233,15 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
   <p>Freeze the cluster to its mean (not to zero, which shifts everything downstream) and measure how far the output distribution moves, averaged over inputs. This is the ground truth the cheaper scores try to approximate. It costs one forward pass per cluster over the calibration set, which is fine for hundreds of clusters.</p>
   <h3>Cheap first-order version</h3>
   <div class="formula">Î(C) ≈ E_x | Σ_j (a_j(x) − ā_j) · ∂L/∂a_j(x) |</div>
-  <p>One backward pass scores every neuron at once. It is the input-driven Taylor criterion of <a href="https://arxiv.org/abs/1906.10771" target="_blank" rel="noopener">Molchanov et al. 2019</a>, with the mean instead of zero as the reference. Notice it multiplies two things you mentioned: how much a part varies (<code>a − ā</code>) and how much the output listens to it (the gradient).</p>
+  <p>One backward pass scores every neuron at once. It is the input-driven Taylor criterion of <a href="https://arxiv.org/abs/1906.10771" target="_blank" rel="noopener">Molchanov et al. 2019</a>, with the mean instead of zero as the reference. Notice it multiplies two things: how much a part varies (<code>a − ā</code>) and how much the output listens to it (the gradient).</p>
   <h3>Why entropy alone is not enough</h3>
   <p>Activation entropy or variance measures only the first factor. A neuron can swing wildly while the next layer ignores it, and a quiet neuron can sit on a decision boundary. In the toy run below, entropy ranks neurons only loosely like the true ablation effect (rank correlation <b class="num" id="c-ent"></b>), variance slightly better (<b class="num" id="c-var"></b>), and deviation times outgoing weight best (<b class="num" id="c-prx"></b>). Use entropy as a quick filter for dead or near-constant units; it finds those perfectly.</p>
-  <p>The information-theoretic version of your idea is mutual information between a cluster and the output, <code>I(a_C ; y)</code>, as in <a href="https://arxiv.org/abs/2003.08472" target="_blank" rel="noopener">MINT</a> and the <a href="https://arxiv.org/abs/1802.10399" target="_blank" rel="noopener">variational information bottleneck</a> approach. It is principled but hard to estimate in high dimensions; the ablation KL is a practical stand-in. <a href="https://arxiv.org/abs/2002.09815" target="_blank" rel="noopener">Neuron Shapley</a> handles interactions between neurons (two that only matter together) at much higher cost.</p>
-  <h3>Replaceability: the score your idea really needs</h3>
+  <p>The information-theoretic version of the idea is mutual information between a cluster and the output, <code>I(a_C ; y)</code>, as in <a href="https://arxiv.org/abs/2003.08472" target="_blank" rel="noopener">MINT</a> and the <a href="https://arxiv.org/abs/1802.10399" target="_blank" rel="noopener">variational information bottleneck</a> approach. It is principled but hard to estimate in high dimensions; the ablation KL is a practical stand-in. <a href="https://arxiv.org/abs/2002.09815" target="_blank" rel="noopener">Neuron Shapley</a> handles interactions between neurons (two that only matter together) at much higher cost.</p>
+  <h3>Replaceability: the score the idea really needs</h3>
   <div class="formula">R_k(C) = E_x || a_C(x) − f_k(a_in(x)) ||²   for the best f_k with k parameters</div>
-  <p>Fit the ladder of simple functions <code>f_k</code> from the cluster's inputs to its outputs and see how small <code>k</code> can go before the error (or the downstream KL) passes your tolerance. A cluster that is important but has a small <code>k</code> is the ideal target for a grown replacement.</p>
+  <p>Fit the ladder of simple functions <code>f_k</code> from the cluster's inputs to its outputs and see how small <code>k</code> can go before the error (or the downstream KL) passes the tolerance. A cluster that is important but has a small <code>k</code> is the ideal target for a grown replacement.</p>
   <h3>About the training-history idea</h3>
-  <p>It has real precedent: <a href="https://arxiv.org/abs/2005.07683" target="_blank" rel="noopener">movement pruning</a> keeps weights that moved away from zero during fine-tuning, and <a href="https://arxiv.org/abs/1703.04200" target="_blank" rel="noopener">synaptic intelligence</a> accumulates each weight's contribution to the loss drop along the training path. They are cheap if you log during training. The drawback is the one you named: they reward what mattered on the way, which can differ from what the final network relies on, and you need the training run. For an already-trained network you didn't log, input-driven scores are the only option anyway.</p>
+  <p>It has real precedent: <a href="https://arxiv.org/abs/2005.07683" target="_blank" rel="noopener">movement pruning</a> keeps weights that moved away from zero during fine-tuning, and <a href="https://arxiv.org/abs/1703.04200" target="_blank" rel="noopener">synaptic intelligence</a> accumulates each weight's contribution to the loss drop along the training path. They are cheap if you log during training. The drawback is the obvious one: they reward what mattered on the way, which can differ from what the final network relies on, and you need the training run. For an already-trained network without training logs, input-driven scores are the only option anyway.</p>
 </section>
 
 
@@ -257,7 +261,7 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
 <section aria-labelledby="lit-h">
   <h2 id="lit-h">What already exists</h2>
   <div class="tbl"><table>
-    <thead><tr><th>Piece of your idea</th><th>Status</th><th>Closest work</th></tr></thead>
+    <thead><tr><th>Piece of the idea</th><th>Status</th><th>Closest work</th></tr></thead>
     <tbody>
       <tr><td>Grow a network from minimal structure (NEAT)</td><td><span class="pill done">Done</span></td><td><a href="https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf" target="_blank" rel="noopener">NEAT</a> (Stanley &amp; Miikkulainen 2002); successors reviewed in <a href="https://direct.mit.edu/evco/article/29/1/1/97341/A-Systematic-Literature-Review-of-the-Successors" target="_blank" rel="noopener">Papavasileiou et al. 2021</a>; deep variants in <a href="https://arxiv.org/abs/1703.00548" target="_blank" rel="noopener">CoDeepNEAT</a>.</td></tr>
       <tr><td>NEAT topology with backprop-trained weights (fixes slow, stalling training)</td><td><span class="pill done">Done</span></td><td><a href="https://blog.otoro.net/2016/05/07/backprop-neat/" target="_blank" rel="noopener">Backprop NEAT</a> (Ha 2016); <a href="https://arxiv.org/abs/2411.03726" target="_blank" rel="noopener">PropNEAT</a> (2024, GPU-friendly).</td></tr>
@@ -276,17 +280,17 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
 <section class="col" aria-labelledby="risk-h">
   <h2 id="risk-h">Where it is likely to break</h2>
   <div class="risk">
-    <div><b>Your baseline is plain structured pruning plus fine-tuning.</b> At equal parameter count it is strong. The grown replacement has to beat “delete the weakest neurons and fine-tune”, or the extra machinery isn't earning its keep.</div>
+    <div><b>The baseline is plain structured pruning plus fine-tuning.</b> At equal parameter count it is strong. The grown replacement has to beat “delete the weakest neurons and fine-tune”, or the extra machinery isn't earning its keep.</div>
     <div><b>Fewer parameters is not faster.</b> NEAT topologies are irregular and sparse; GPUs are fast on dense matrices. Expect smaller models, not lower latency, unless you constrain growth to dense blocks.</div>
     <div><b>Local fit, global error.</b> A replacement that matches its cluster with small error can still shift downstream layers. Train it on local error plus the final-output KL, and fine-tune after stitching.</div>
-    <div><b>The calibration set defines “importance”.</b> A cluster that is idle on your test inputs may handle rare cases. Include hard and out-of-distribution examples when scoring.</div>
+    <div><b>The calibration set defines “importance”.</b> A cluster that is idle on the test inputs may handle rare cases. Include hard and out-of-distribution examples when scoring.</div>
     <div><b>Clusters must have clean boundaries.</b> In an MLP that is easy. In CNNs think channels; in transformers, attention heads and MLP blocks. Cross-layer clusters are the most interesting and the hardest to cut cleanly.</div>
     <div><b>Dead units are the free win.</b> 7 of 64 neurons in the toy net never fire. They need a constant, not a grown network; don't let them flatter the results.</div>
   </div>
 </section>
 
 <section class="col" aria-labelledby="next-h">
-  <h2 id="next-h">A first experiment</h2>
+  <h2 id="next-h">Next steps</h2>
   <ol class="steps">
     <li><div>Train an MLP on MNIST, then a small CNN on CIFAR-10, to full accuracy.</div></li>
     <li><div>Compute ablation KL and the first-order score per neuron and per cluster on 2,000 images; confirm the cheap score tracks the expensive one.</div></li>
@@ -1003,10 +1007,19 @@ $('v-play').addEventListener('click', () => {
   if (playing) stopAuto();
   if (playing && running !== token) run();
 });
+const MDESC = {
+  magnitude: ['Classic pruning: delete small weights.', 'Cuts the weakest connections one by one. Every neuron stays, wired more and more thinly.', 'Breaks when small: 49.0% at 163 parameters'],
+  neuron: ['Classic pruning: delete weak neurons.', 'Removes whole neurons that barely change the output, then fine-tunes.', 'Can\'t get small: stops at 717 parameters, 93.6%'],
+  neat: ['NEAT, first try: replace instead of delete.', 'Swaps a weak group of neurons for a tiny network grown from one node (green rings).', 'Accurate but stays big: stops at 1,469 parameters, 96.3%'],
+  merge: ['NEAT-merge: many neurons become one.', 'Merges several neurons into ONE new grown neuron (green ring), then re-fits the rest to cover for them.', 'Small and accurate: 91.0% at 163 parameters'],
+  deep: ['NEAT-deep: NEAT-merge that can add layers.', 'Same as NEAT-merge, but a new neuron may open a new layer (green frame).', 'Uses new layers, but no better: 90.7% at 162 parameters'],
+};
+function showDesc(m) { const d = MDESC[m]; if (d) $('m-desc').innerHTML = '<b>' + d[0] + '</b> ' + d[1] + '<span class="v">Result (mean of 3 seeds) · ' + d[2] + '</span>'; }
 document.querySelectorAll('#methods button').forEach(b => b.addEventListener('click', () => {
-  method = b.dataset.m; document.querySelectorAll('#methods button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  method = b.dataset.m; showDesc(method); document.querySelectorAll('#methods button').forEach(x => x.setAttribute('aria-pressed', x === b));
   token++; playing = false; $('v-play').textContent = 'Play'; round = 0; rest(method, 0);
 }));
+showDesc(method);
 const rb = $('rounds');
 for (let r = 0; r <= CMP.rounds; r++) {
   const b = document.createElement('button'); b.dataset.r = r; b.textContent = r === 0 ? 'Start' : r; b.setAttribute('aria-pressed', r === 0);

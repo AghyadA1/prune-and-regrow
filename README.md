@@ -21,23 +21,27 @@ NEAT evolves a 148-parameter student (93.7%) over 40 generations.
 </tr>
 </table>
 
-## What this is
+## The five methods at a glance
 
-A 64-32-32-10 MLP trained on scikit-learn's 8x8 digits (3,466 parameters, 97.7% test accuracy) is cut down in six rounds to about 160 parameters. Each method gets the same fine-tuning budget, and every number is the mean of 3 seeds. The test set is 540 images, so one image is 0.19 points and differences under about a point are noise.
+![Five ways to shrink the same network](screenshots/methods-at-a-glance.png)
 
-It is a small, CPU-only study meant to make pruning visible and to test one idea honestly, not a benchmark.
+| | method | what it does | final size | accuracy |
+|---|---|---|---|---|
+| ✂️ | **Delete small weights** | cuts the weakest connections | 163 params | 49.0% ❌ breaks |
+| ✂️ | **Delete weak neurons** | removes whole neurons that barely matter | stops at 717 | 93.6% ⚠️ can't get small |
+| 🌱 | **NEAT, first try** | replaces weak neuron groups with tiny grown networks | stops at 1,469 | 96.3% ⚠️ stays big |
+| 🌱 | **NEAT-merge** | merges many neurons into one grown neuron, re-fits the rest | **163 params** | **91.0%** ✅ |
+| 🌱 | **NEAT-deep** | NEAT-merge that can also add layers | 162 params | 90.7% (same as merge) |
 
-## Methods
+✂️ only removes · 🌱 removes and grows. Start: 3,466 parameters, 97.7%. All numbers are the mean of 3 seeds.
 
-| method | idea |
-|---|---|
-| Delete small weights | classic magnitude pruning, then fine-tune |
-| Delete weak neurons | remove neurons with the smallest mean-ablation effect on the output |
-| NEAT-merge (`neat_merge.py`) | merge several neurons into one NEAT-grown neuron, delete neurons, or trim links; pick the change that loses least per parameter saved, after re-fitting the surviving outgoing weights by least squares |
-| NEAT-deep (`neat_deep.py`) | NEAT-merge on a general graph, so new neurons can open new hidden layers and links can skip layers |
-| Distillation (`distill/`) | NEAT builds a student under a hard parameter cap, trained on the original network's soft labels |
+## Setup
 
-## Results
+A 64-32-32-10 MLP trained on scikit-learn's 8x8 digits is cut down in six rounds. Each method gets the same fine-tuning budget. The test set is 540 images, so one image is 0.19 points and differences under about a point are noise. It is a small, CPU-only study meant to make pruning visible and to test one idea honestly, not a benchmark.
+
+The last step distills the original network into a NEAT-grown student under a hard parameter cap (`distill/`).
+
+## Detailed results
 
 Pruning (mean test accuracy over 3 seeds, from `summary.json`):
 
