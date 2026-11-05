@@ -1,0 +1,8 @@
+seed 1: base acc 0.9796
+  flat seed 1 round 1: params 1707 acc 0.9778 (cut 0.9759) {'merge': 5, 'delete': 0, 'links': 5} new layers 0 depths [1.0, 2.0] 393.6s
+  flat seed 1 round 2: params 1079 acc 0.9741 (cut 0.9759) {'merge': 15, 'delete': 2, 'links': 6} new layers 0 depths [1.0, 2.0] 893.1s
+  flat seed 1 round 3: params 734 acc 0.9704 (cut 0.9722) {'merge': 20, 'delete': 3, 'links': 4} new layers 0 depths [1.0, 2.0] 729.4s
+  flat seed 1 round 4: params 453 acc 0.9574 (cut 0.9519) {'merge': 16, 'delete': 1, 'links': 8} new layers 0 depths [1.0, 2.0] 460.1s
+  flat seed 1 round 5: params 287 acc 0.9407 (cut 0.9370) {'merge': 10, 'delete': 1, 'links': 5} new layers 0 depths [1.0, 2.0] 264.9s
+  flat seed 1 round 6: params 163 acc 0.9056 (cut 0.8537) {'merge': 29, 'delete': 1, 'links': 1} new layers 0 depths [1.0, 2.0] 190.0s
+wrote /mnt/project-files/prune-regrow/nd_flat_1.json

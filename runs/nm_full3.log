@@ -1,0 +1,15 @@
+seed 1: base acc 0.9796
+  full3 seed 1 round 1: params 1708 acc 0.9741 (cut 0.9759) {'merge': 6, 'delete': 0, 'links': 5} 29.5s
+  full3 seed 1 round 2: params 1073 acc 0.9667 (cut 0.9704) {'merge': 10, 'delete': 0, 'links': 7} 32.2s
+  full3 seed 1 round 3: params 722 acc 0.9685 (cut 0.9630) {'merge': 11, 'delete': 0, 'links': 5} 25.3s
+  full3 seed 1 round 4: params 450 acc 0.9630 (cut 0.9574) {'merge': 18, 'delete': 2, 'links': 4} 148.9s
+  full3 seed 1 round 5: params 288 acc 0.9333 (cut 0.9296) {'merge': 12, 'delete': 1, 'links': 5} 199.3s
+  full3 seed 1 round 6: params 158 acc 0.8833 (cut 0.8611) {'merge': 23, 'delete': 1, 'links': 4} 146.4s
+seed 2: base acc 0.9759
+  full3 seed 2 round 1: params 1726 acc 0.9722 (cut 0.9741) {'merge': 7, 'delete': 0, 'links': 4} 26.5s
+  full3 seed 2 round 2: params 1066 acc 0.9685 (cut 0.9630) {'merge': 8, 'delete': 0, 'links': 8} 28.5s
+  full3 seed 2 round 3: params 726 acc 0.9630 (cut 0.9556) {'merge': 11, 'delete': 3, 'links': 5} 29.1s
+  full3 seed 2 round 4: params 440 acc 0.9556 (cut 0.9463) {'merge': 21, 'delete': 0, 'links': 6} 36.6s
+  full3 seed 2 round 5: params 287 acc 0.9370 (cut 0.9315) {'merge': 10, 'delete': 1, 'links': 4} 15.5s
+  full3 seed 2 round 6: params 159 acc 0.9241 (cut 0.8907) {'merge': 14, 'delete': 1, 'links': 2} 11.7s
+wrote /mnt/project-files/prune-regrow/nm_full3.json

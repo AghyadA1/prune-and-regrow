@@ -1,0 +1,8 @@
+seed 0: base acc 0.9759
+  skip seed 0 round 1: params 1725 acc 0.9722 (cut 0.9685) {'merge': 12, 'delete': 0, 'links': 3} new layers 0 depths [1.0, 2.0] 410.2s
+  skip seed 0 round 2: params 1079 acc 0.9741 (cut 0.9667) {'merge': 10, 'delete': 1, 'links': 9} new layers 0 depths [1.0, 2.0] 878.4s
+  skip seed 0 round 3: params 740 acc 0.9704 (cut 0.9685) {'merge': 7, 'delete': 3, 'links': 7} new layers 0 depths [1.0, 2.0] 444.8s
+  skip seed 0 round 4: params 462 acc 0.9667 (cut 0.9648) {'merge': 15, 'delete': 2, 'links': 6} new layers 0 depths [1.0, 2.0] 584.8s
+  skip seed 0 round 5: params 283 acc 0.9537 (cut 0.9444) {'merge': 21, 'delete': 3, 'links': 4} new layers 0 depths [1.0, 2.0] 525.8s
+  skip seed 0 round 6: params 160 acc 0.9111 (cut 0.8759) {'merge': 15, 'delete': 1, 'links': 8} new layers 0 depths [1.0, 2.0] 365.5s
+wrote /mnt/project-files/prune-regrow/nd_skip_0.json

@@ -1,0 +1,8 @@
+seed 0: base acc 0.9759
+  deep seed 0 round 1: params 1695 acc 0.9741 (cut 0.9759) {'merge': 6, 'delete': 0, 'links': 5} new layers 4 depths [1.0, 1.25, 1.5, 2.0, 2.5] 695.6s
+  deep seed 0 round 2: params 1078 acc 0.9722 (cut 0.9704) {'merge': 10, 'delete': 2, 'links': 9} new layers 1 depths [1.0, 1.25, 2.0] 842.4s
+  deep seed 0 round 3: params 737 acc 0.9759 (cut 0.9759) {'merge': 12, 'delete': 4, 'links': 10} new layers 4 depths [1.0, 1.0625, 1.25, 2.0, 2.5] 877.2s
+  deep seed 0 round 4: params 460 acc 0.9556 (cut 0.9593) {'merge': 17, 'delete': 6, 'links': 5} new layers 1 depths [1.0, 1.03125, 1.0625, 2.0, 2.5] 696.4s
+  deep seed 0 round 5: params 289 acc 0.9481 (cut 0.9407) {'merge': 12, 'delete': 3, 'links': 6} new layers 2 depths [1.0, 1.015625, 1.03125, 2.0, 2.5] 445.6s
+  deep seed 0 round 6: params 163 acc 0.9000 (cut 0.8778) {'merge': 16, 'delete': 3, 'links': 10} new layers 2 depths [1.0, 1.015625, 2.0, 2.125, 2.25] 500.4s
+wrote /mnt/project-files/prune-regrow/nd_deep_0.json

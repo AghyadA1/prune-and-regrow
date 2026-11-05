@@ -1,0 +1,354 @@
+<title>Distilled NEAT Student</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column with a wide dark 3D stage, same look as the Prune and Regrow page. */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --fg:#1b1f2a; --muted:#5b6475; --line:#d9dde5;
+  --accent:#3a4fd0; --accent-soft:#e6e9fb; --good:#1f7a52;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12141b; --panel:#1a1d27; --fg:#e7e9f0; --muted:#9aa2b4; --line:#2c3140;
+  --accent:#8fa0ff; --accent-soft:#252b4a; --good:#5cc79a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12141b; --panel:#1a1d27; --fg:#e7e9f0; --muted:#9aa2b4; --line:#2c3140;
+  --accent:#8fa0ff; --accent-soft:#252b4a; --good:#5cc79a; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:1.06rem;line-height:1.6}
+.wrap{max-width:72rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:2.2rem 3.5rem;display:grid;gap:1.4rem}
+.wrap>*{min-width:0}
+h1{font-family:var(--display);font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin:0;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{margin:0;max-width:46rem}
+.controls{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.controls .lab{font:600 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:.3rem}
+.controls button{font:500 .88rem var(--display);padding:.45rem .85rem;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.controls button[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.controls button.dg{min-width:2.4rem;padding-inline:.6rem;font-variant-numeric:tabular-nums}
+.controls button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stage-wrap{position:relative;border-radius:14px;overflow:hidden;background:#0b0e1c;border:1px solid #232a48}
+.stage{width:100%;height:clamp(400px,64vh,660px);cursor:grab}
+.stage:active{cursor:grabbing}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:.5rem;flex-wrap:wrap;pointer-events:none}
+.hud div{background:rgba(14,18,38,.78);border:1px solid #2a3256;border-radius:10px;padding:.4rem .7rem;display:grid;color:#e9ecf8;backdrop-filter:blur(4px)}
+.hud .k{font:600 .62rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#8f97b8}
+.hud b{font:700 1.15rem var(--display);font-variant-numeric:tabular-nums}
+.legend3d{position:absolute;bottom:10px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:.4rem .9rem;font:.72rem var(--mono);color:#b9c0dc;pointer-events:none}
+.legend3d .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+.legend3d .ramp3{width:44px;background:linear-gradient(90deg,#1d2a6b,#2f5fd0,#22a7a0,#9bd34a,#ffe066)}
+.tip{position:absolute;max-width:260px;background:rgba(14,18,38,.92);color:#e9ecf8;border:1px solid #2a3256;border-radius:8px;padding:.45rem .6rem;font:.76rem/1.4 var(--mono);pointer-events:none}
+.caption{margin:0;max-width:52rem;min-height:3.2em}
+.hint{margin:0;font:.78rem var(--mono);color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.9rem;max-width:60rem}
+.fact{border-top:2px solid var(--line);padding-top:.5rem}
+.fact b{font-family:var(--display);font-size:1.5rem;display:block;font-variant-numeric:tabular-nums}
+.fact span{font-size:.92rem;color:var(--muted)}
+.fact.win{border-top-color:var(--good)}
+@media (max-width:600px){.stage{height:440px}.hud b{font-size:1rem}}
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:.6rem">
+    <div class="eyebrow">Distillation · NEAT · 3D</div>
+    <h1>The best distilled student</h1>
+    <p class="lede">The smallest NEAT-merge network was the starting point. NEAT then rebuilt it under a hard cap of 150 parameters while it learned to copy the original 3,466-parameter network. This is the best run (seed 1). Switch between the two networks to see what NEAT changed, or feed in a test digit to watch it flow through.</p>
+  </header>
+
+  <div class="facts">
+    <div class="fact"><b id="f-start">–</b><span>Starting network: the smallest NEAT-merge result</span></div>
+    <div class="fact win"><b id="f-best">–</b><span>Distilled NEAT student: smaller and more accurate</span></div>
+    <div class="fact"><b id="f-teach">–</b><span>Original network it learned from (the teacher)</span></div>
+  </div>
+
+  <div style="display:grid;gap:.6rem">
+    <div class="controls" role="group" aria-label="Network">
+      <span class="lab">Network</span>
+      <button id="b-start" aria-pressed="false">Starting network</button>
+      <button id="b-best" aria-pressed="true">Distilled NEAT student</button>
+      <button id="v-reset">Reset view</button>
+    </div>
+    <div class="controls" role="group" aria-label="Color">
+      <span class="lab">Color by</span>
+      <button id="b-imp" aria-pressed="true">Importance</button>
+      <span class="lab" style="margin-left:.4rem">or feed digit</span>
+      <span id="digits" style="display:contents"></span>
+    </div>
+  </div>
+
+  <div class="stage-wrap">
+    <div id="stage3d" class="stage" aria-label="3D view of the network; drag or two-finger scroll to turn it, pinch to zoom"></div>
+    <div class="hud" aria-live="polite">
+      <div><span class="k">Network</span><b id="hud-net">–</b></div>
+      <div><span class="k">Test accuracy</span><b id="hud-acc">–</b></div>
+      <div><span class="k">Parameters</span><b id="hud-par">–</b></div>
+      <div id="hud-pred-box" hidden><span class="k">Reads the digit as</span><b id="hud-pred">–</b></div>
+    </div>
+    <div class="tip" id="tip3d" hidden></div>
+    <div class="legend3d">
+      <span id="lg-ramp"><i class="sw ramp3"></i><span id="lg-ramp-t">importance, low → high</span></span>
+      <span><i class="sw" style="background:#5aa9ff"></i>positive weight</span>
+      <span><i class="sw" style="background:#c77dff"></i>negative weight</span>
+      <span><i class="sw" style="background:transparent;border:2px solid #46e08f;border-radius:50%"></i>grown by NEAT</span>
+      <span><i class="sw" style="background:transparent;border:2px solid #46e08f;border-radius:2px"></i>new layer</span>
+    </div>
+  </div>
+  <p class="caption" id="cap3d"></p>
+  <p class="hint">Touchpad: two-finger scroll turns the network, pinch zooms, shift + scroll pans. Mouse: drag to turn, shift-drag or right-drag to pan. Hover a node to read its numbers.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+const DATA = __DATA__;
+const $ = id => document.getElementById(id);
+const S = { start: DATA.start, best: DATA.best };
+const pct = a => (a * 100).toFixed(1) + '%';
+$('f-start').textContent = `${S.start.params} params · ${pct(S.start.acc)}`;
+$('f-best').textContent = `${S.best.params} params · ${pct(S.best.acc)}`;
+$('f-teach').textContent = `3,466 params · ${pct(DATA.teacher_acc)}`;
+
+const stage = $('stage3d');
+if (!window.THREE) { $('cap3d').textContent = 'The 3D view needs WebGL and could not load in this browser.'; return; }
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true }); }
+catch (e) { $('cap3d').textContent = 'The 3D view needs WebGL, which this browser has turned off.'; return; }
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+renderer.setClearColor(0x0b0e1c, 1);
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0b0e1c, 40, 75);
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(8, 14, 6); scene.add(dl);
+
+// ---------- layout: a node's depth (inputs 0, outputs 1) sets its plane ----------
+const ZL = 21, GAP = 1.1, CENTER = new THREE.Vector3(0, 0, ZL / 2);
+const zOf = d => d * ZL;
+const ORIG = [1 / 3, 2 / 3];
+const isOrig = d => ORIG.some(o => Math.abs(o - d) < 1e-3);
+const pixelPos = p => new THREE.Vector3(((p % 8) - 3.5) * GAP, (3.5 - Math.floor(p / 8)) * GAP, 0);
+const outPos = d => new THREE.Vector3(((d % 5) - 2) * 1.35, (0.5 - Math.floor(d / 5)) * 1.35, ZL);
+
+const C = { pos: new THREE.Color(0x5aa9ff), neg: new THREE.Color(0xc77dff), out: new THREE.Color(0xdfe4f5), dark: new THREE.Color(0x1a2040) };
+const RAMP = [0x1d2a6b, 0x2f5fd0, 0x22a7a0, 0x9bd34a, 0xffe066].map(h => new THREE.Color(h));
+const ramp = t => { t = Math.max(0, Math.min(1, t)) * 4; const i = Math.min(3, Math.floor(t)); return RAMP[i].clone().lerp(RAMP[i + 1], t - i); };
+const impT = v => (Math.log10(v + 1e-5) + 5) / 3.3;
+
+// place every state's hidden neurons: per plane, sorted by importance (least important bottom left)
+for (const st of Object.values(S)) {
+  st.byId = new Map(); const planes = new Map();
+  for (const n of st.nodes) { st.byId.set(n.id, n); const k = n.d.toFixed(4); if (!planes.has(k)) planes.set(k, []); planes.get(k).push(n); }
+  for (const list of planes.values()) {
+    list.sort((a, b) => a.imp - b.imp);
+    const cols = Math.min(list.length, 6), rows = Math.ceil(list.length / cols);
+    list.forEach((n, r) => {
+      const row = Math.floor(r / cols), inRow = Math.min(cols, list.length - row * cols), col = r % cols;
+      n.p = new THREE.Vector3((col - (inRow - 1) / 2) * GAP * 1.25, (row - (rows - 1) / 2) * GAP * 1.25, zOf(n.d));
+    });
+  }
+  st.depths = [...planes.keys()].map(Number);
+  st.ins = new Map(); st.outs = new Map();
+  for (const [a, b] of st.edges) { st.ins.set(b, (st.ins.get(b) || 0) + 1); st.outs.set(a, (st.outs.get(a) || 0) + 1); }
+}
+
+// ---------- nodes ----------
+const nodes = new Map();
+const sphere = new THREE.SphereGeometry(0.24, 18, 14), pixGeo = new THREE.BoxGeometry(0.82, 0.82, 0.08);
+const haloTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  g.strokeStyle = '#46e08f'; g.lineWidth = 10; g.beginPath(); g.arc(64, 64, 50, 0, Math.PI * 2); g.stroke(); return new THREE.CanvasTexture(c); })();
+function mkNode(id, geo, pos, info) {
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .45, metalness: .1 }));
+  m.position.copy(pos); scene.add(m);
+  const n = { id, mesh: m, tpos: pos.clone(), col: new THREE.Color(0x1d2a6b), tcol: new THREE.Color(), s: 1, ts: 1, info };
+  m.userData.node = n; nodes.set(id, n); return n;
+}
+for (let p = 0; p < 64; p++) mkNode(p, pixGeo, pixelPos(p), { kind: 'pixel', p });
+for (let d = 0; d < 10; d++) mkNode(64 + d, sphere, outPos(d), { kind: 'out', d });
+const hiddenIds = new Set([...S.start.nodes, ...S.best.nodes].map(n => n.id));
+for (const id of hiddenIds) {
+  const n0 = S.best.byId.get(id) || S.start.byId.get(id), n = mkNode(id, sphere, n0.p, { kind: 'hidden' });
+  n.s = n.ts = 0; n.mesh.scale.setScalar(0);
+  if (S.best.byId.get(id)?.new) { const h = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex, transparent: true, depthWrite: false })); h.scale.set(0.95, 0.95, 1); n.mesh.add(h); n.halo = h; }
+}
+
+// ---------- plane frames and labels ----------
+function label(text, pos, size = 0.9, color = '#c9cfe6') {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 96; const g = c.getContext('2d');
+  g.font = '600 44px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, 256, 48);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+  s.position.copy(pos); s.scale.set(size * 5.3, size, 1); scene.add(s); return s;
+}
+function frame(w, h, z, color = 0x3a4266) {
+  const g = new THREE.BufferGeometry().setFromPoints([[-w, -h], [w, -h], [w, h], [-w, h], [-w, -h]].map(([x, y]) => new THREE.Vector3(x, y, z)));
+  const line = new THREE.Line(g, new THREE.LineBasicMaterial({ color, transparent: true, opacity: .8 })); scene.add(line); return line;
+}
+frame(4.9, 4.9, 0); frame(3.5, 1.9, ZL);
+label('INPUT 8×8 PIXELS', new THREE.Vector3(0, 6.2, 0), 1.25); label('OUTPUT DIGITS', new THREE.Vector3(0, 3.2, ZL), 1.25);
+const PLANES = new Map();
+for (const d of new Set([...S.start.depths, ...S.best.depths])) {
+  const orig = isOrig(d), z = zOf(d);
+  const line = frame(4.6, 2.6, z, orig ? 0x3a4266 : 0x46e08f);
+  const lab = orig ? label(d < .5 ? 'HIDDEN 1' : 'HIDDEN 2', new THREE.Vector3(0, 3.6, z), 1.15)
+                   : label('NEW LAYER', new THREE.Vector3(0, -3.3, z), 1.0, '#46e08f');
+  PLANES.set(d, { line, lab, op: 0, t: 0, orig });
+  line.material.opacity = 0; lab.material.opacity = 0;
+}
+
+// ---------- edges ----------
+const MAXE = 400, ePos = new Float32Array(MAXE * 6), eCol = new Float32Array(MAXE * 6);
+const eGeo = new THREE.BufferGeometry();
+eGeo.setAttribute('position', new THREE.BufferAttribute(ePos, 3)); eGeo.setAttribute('color', new THREE.BufferAttribute(eCol, 3));
+scene.add(new THREE.LineSegments(eGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .95, blending: THREE.AdditiveBlending, depthWrite: false })));
+
+// ---------- state ----------
+let net = 'best', sample = null, fade = 1, act = null;
+function forward(st, x) {
+  const a = new Map(); x.forEach((v, i) => a.set(i, v));
+  const inc = new Map(); for (const [s, d, w] of st.edges) { if (!inc.has(d)) inc.set(d, []); inc.get(d).push([s, w]); }
+  for (const n of [...st.nodes].sort((p, q) => p.d - q.d)) a.set(n.id, Math.max(0, n.b + (inc.get(n.id) || []).reduce((t, [s, w]) => t + w * (a.get(s) || 0), 0)));
+  const z = st.obias.map((b, o) => b + (inc.get(64 + o) || []).reduce((t, [s, w]) => t + w * (a.get(s) || 0), 0));
+  const m = Math.max(...z), e = z.map(v => Math.exp(v - m)), sum = e.reduce((p, q) => p + q, 0);
+  e.forEach((v, o) => a.set(64 + o, v / sum)); return a;
+}
+function apply() {
+  const st = S[net];
+  act = sample == null ? null : forward(st, DATA.samples[sample].x);
+  const hmax = act ? Math.max(1e-6, ...st.nodes.map(n => act.get(n.id))) : 1;
+  for (const n of nodes.values()) {
+    const i = n.info;
+    if (i.kind === 'pixel') n.tcol.copy(act ? ramp(DATA.samples[sample].x[i.p]) : ramp(impT(st.pix[i.p])));
+    else if (i.kind === 'out') { const pr = act ? act.get(n.id) : 0; n.tcol.copy(act ? ramp(pr) : C.out); n.ts = act ? 0.8 + pr * 0.9 : 1; }
+    else {
+      const h = st.byId.get(n.id);
+      n.ts = h ? 1 : 0;
+      if (h) { n.tpos.copy(h.p); n.tcol.copy(act ? ramp(act.get(n.id) / hmax) : ramp(impT(h.imp))); }
+      if (n.halo) n.halo.visible = net === 'best';
+    }
+  }
+  for (const [d, f] of PLANES) f.t = st.depths.some(x => Math.abs(x - d) < 1e-6) ? 1 : 0;
+  fade = 0;
+  const nl = st.depths.filter(d => !isOrig(d)).length, grown = st.nodes.filter(n => n.new).length;
+  $('hud-net').textContent = net === 'best' ? 'Distilled NEAT student' : 'Starting network';
+  $('hud-acc').textContent = pct(st.acc); $('hud-par').textContent = st.params;
+  $('hud-pred-box').hidden = !act;
+  if (act) { const pr = DATA.samples[sample].x && [...Array(10).keys()].map(o => act.get(64 + o)); const k = pr.indexOf(Math.max(...pr)); $('hud-pred').textContent = `${k} (${Math.round(pr[k] * 100)}%)`; }
+  $('lg-ramp-t').textContent = act ? 'activation, low → high' : 'importance, low → high';
+  const usedPix = new Set(st.edges.filter(e => e[0] < 64).map(e => e[0])).size;
+  $('cap3d').textContent = (net === 'best'
+    ? `Distilled NEAT student: ${pct(st.acc)} with ${st.params} parameters. ${st.nodes.length} hidden neurons on ${st.depths.length} planes; NEAT opened ${nl} new layer${nl === 1 ? '' : 's'} and grew ${grown} new neuron${grown === 1 ? '' : 's'} (green rings). It reads ${usedPix} of the 64 pixels.`
+    : `Starting network (smallest NEAT-merge result): ${pct(st.acc)} with ${st.params} parameters, ${st.nodes.length} hidden neurons in the 2 original layers. It reads ${usedPix} of the 64 pixels.`)
+    + (act ? ` Showing test digit ${DATA.samples[sample].y}: brighter neurons fire harder, brighter links carry more signal.` : '');
+  $('b-start').setAttribute('aria-pressed', net === 'start'); $('b-best').setAttribute('aria-pressed', net === 'best');
+  $('b-imp').setAttribute('aria-pressed', sample == null);
+  document.querySelectorAll('#digits button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.k === sample));
+}
+
+function draw() {
+  const k = 0.12;
+  for (const n of nodes.values()) {
+    n.mesh.position.lerp(n.tpos, k); n.col.lerp(n.tcol, k); n.s += (n.ts - n.s) * k;
+    n.mesh.material.color.copy(n.col); n.mesh.scale.setScalar(Math.max(1e-4, n.s)); n.mesh.visible = n.s > 0.01;
+  }
+  for (const f of PLANES.values()) { f.op += (f.t - f.op) * k; f.line.material.opacity = 0.8 * f.op; f.lab.material.opacity = f.op; }
+  fade = Math.min(1, fade + 0.04);
+  const st = S[net]; let wmax = 0, smax = 0;
+  for (const [a, , w] of st.edges) { wmax = Math.max(wmax, Math.abs(w)); if (act) smax = Math.max(smax, Math.abs(w * act.get(a))); }
+  let i = 0;
+  for (const [a, b, w] of st.edges) {
+    if (i >= MAXE) break;
+    const A = nodes.get(a).mesh.position, B = nodes.get(b).mesh.position, o = i * 6;
+    ePos[o] = A.x; ePos[o + 1] = A.y; ePos[o + 2] = A.z; ePos[o + 3] = B.x; ePos[o + 4] = B.y; ePos[o + 5] = B.z;
+    const br = fade * (act ? 0.04 + 0.96 * Math.abs(w * act.get(a)) / (smax || 1) : 0.18 + 0.82 * Math.abs(w) / (wmax || 1));
+    const c = w >= 0 ? C.pos : C.neg;
+    eCol[o] = eCol[o + 3] = c.r * br; eCol[o + 1] = eCol[o + 4] = c.g * br; eCol[o + 2] = eCol[o + 5] = c.b * br; i++;
+  }
+  eGeo.setDrawRange(0, i * 2); eGeo.attributes.position.needsUpdate = true; eGeo.attributes.color.needsUpdate = true;
+}
+
+// ---------- camera: drag / two-finger scroll orbit, pinch zoom, shift-drag pan ----------
+const R0 = () => (stage.clientWidth / Math.max(1, stage.clientHeight) < 1 ? 40 : 27);
+const cam = { theta: -1.05, phi: 1.22, r: 27, target: CENTER.clone(), auto: true };
+function placeCam() {
+  const s = Math.sin(cam.phi);
+  camera.position.set(cam.target.x + cam.r * s * Math.sin(cam.theta), cam.target.y + cam.r * Math.cos(cam.phi), cam.target.z + cam.r * s * Math.cos(cam.theta));
+  camera.lookAt(cam.target);
+}
+const el = renderer.domElement; el.style.touchAction = 'none';
+const ptrs = new Map(); let lastPinch = 0, mode = null;
+el.addEventListener('pointerdown', e => { el.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); mode = (e.shiftKey || e.button === 2) ? 'pan' : 'rot'; cam.auto = false; });
+el.addEventListener('pointerup', e => { ptrs.delete(e.pointerId); lastPinch = 0; });
+el.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); lastPinch = 0; });
+el.addEventListener('contextmenu', e => e.preventDefault());
+function pan(dx, dy) {
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+  const k = cam.r * 0.0016; cam.target.addScaledVector(right, -dx * k).addScaledVector(up, dy * k);
+}
+el.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) { hover(e); return; }
+  const p = ptrs.get(e.pointerId), dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+  if (ptrs.size === 2) {
+    const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (lastPinch) cam.r = Math.max(10, Math.min(70, cam.r * lastPinch / d)); lastPinch = d; return;
+  }
+  if (mode === 'pan') pan(dx, dy); else { cam.theta -= dx * 0.006; cam.phi = Math.max(0.15, Math.min(Math.PI - 0.15, cam.phi - dy * 0.006)); }
+});
+el.addEventListener('wheel', e => {
+  e.preventDefault(); cam.auto = false;
+  if (e.ctrlKey) cam.r = Math.max(10, Math.min(70, cam.r * Math.exp(e.deltaY * 0.01)));
+  else if (e.shiftKey) pan(-e.deltaX, -e.deltaY);
+  else { cam.theta -= e.deltaX * 0.004; cam.phi = Math.max(0.15, Math.min(Math.PI - 0.15, cam.phi - e.deltaY * 0.004)); }
+}, { passive: false });
+$('v-reset').addEventListener('click', () => { Object.assign(cam, { theta: -1.05, phi: 1.22, r: R0(), auto: true }); cam.target.copy(CENTER); });
+
+// hover tooltip
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), tip = $('tip3d');
+function layerName(d) {
+  if (isOrig(d)) return d < .5 ? 'hidden 1' : 'hidden 2';
+  return 'a new layer ' + (d < 1 / 3 ? 'between the input and hidden 1' : d < 2 / 3 ? 'between hidden 1 and hidden 2' : 'between hidden 2 and the output');
+}
+function hover(e) {
+  const rc = el.getBoundingClientRect(); mouse.set(((e.clientX - rc.left) / rc.width) * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1);
+  ray.setFromCamera(mouse, camera);
+  const hit = ray.intersectObjects([...nodes.values()].filter(n => n.mesh.visible).map(n => n.mesh))[0];
+  if (!hit) { tip.hidden = true; return; }
+  const n = hit.object.userData.node, i = n.info, st = S[net]; let t;
+  if (i.kind === 'pixel') t = `Input pixel row ${Math.floor(i.p / 8) + 1}, column ${i.p % 8 + 1} · ${act ? 'value ' + DATA.samples[sample].x[i.p].toFixed(2) : 'importance ' + st.pix[i.p].toFixed(4)} · ${st.outs.get(n.id) || 0} links`;
+  else if (i.kind === 'out') t = `Output: digit ${i.d}${act ? ' · probability ' + (act.get(n.id) * 100).toFixed(1) + '%' : ''} · ${st.ins.get(n.id) || 0} input links`;
+  else {
+    const h = st.byId.get(n.id); if (!h) { tip.hidden = true; return; }
+    t = `${h.new ? 'Neuron grown by NEAT' : 'Neuron'} in ${layerName(h.d)} · ${act ? 'activation ' + act.get(n.id).toFixed(3) : 'importance ' + h.imp.toFixed(4)} · ${st.ins.get(n.id) || 0} in, ${st.outs.get(n.id) || 0} out`;
+  }
+  tip.textContent = t; tip.hidden = false;
+  tip.style.left = Math.min(rc.width - 270, e.clientX - rc.left + 14) + 'px'; tip.style.top = (e.clientY - rc.top + 14) + 'px';
+}
+el.addEventListener('pointerleave', () => tip.hidden = true);
+
+// ---------- controls ----------
+const dg = $('digits');
+DATA.samples.forEach((s, k) => { const b = document.createElement('button'); b.className = 'dg'; b.dataset.k = k; b.textContent = s.y; b.setAttribute('aria-label', 'Feed test digit ' + s.y); b.addEventListener('click', () => { sample = k; apply(); }); dg.appendChild(b); });
+$('b-imp').addEventListener('click', () => { sample = null; apply(); });
+$('b-start').addEventListener('click', () => { net = 'start'; apply(); });
+$('b-best').addEventListener('click', () => { net = 'best'; apply(); });
+
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false);
+  renderer.domElement.style.width = w + 'px'; renderer.domElement.style.height = h + 'px';
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage); resize(); cam.r = R0();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+apply();
+for (const n of nodes.values()) { n.mesh.position.copy(n.tpos); n.col.copy(n.tcol); n.s = n.ts; }
+for (const f of PLANES.values()) f.op = f.t;
+fade = 1;
+(function loop() {
+  if (cam.auto && !reduce) cam.theta += 0.0016;
+  placeCam(); draw(); renderer.render(scene, camera); requestAnimationFrame(loop);
+})();
+})();
+</script>

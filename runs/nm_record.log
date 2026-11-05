@@ -1,0 +1,8 @@
+seed 0: base acc 0.9759
+  full3_look seed 0 round 1: params 1703 acc 0.9759 (cut 0.9778) {'merge': 6, 'delete': 0, 'links': 4} 33.5s
+  full3_look seed 0 round 2: params 1062 acc 0.9704 (cut 0.9667) {'merge': 13, 'delete': 0, 'links': 7} 47.2s
+  full3_look seed 0 round 3: params 736 acc 0.9741 (cut 0.9685) {'merge': 8, 'delete': 0, 'links': 5} 29.3s
+  full3_look seed 0 round 4: params 462 acc 0.9685 (cut 0.9685) {'merge': 27, 'delete': 1, 'links': 5} 67.4s
+  full3_look seed 0 round 5: params 278 acc 0.9593 (cut 0.9444) {'merge': 16, 'delete': 3, 'links': 7} 44.6s
+  full3_look seed 0 round 6: params 162 acc 0.9167 (cut 0.8889) {'merge': 17, 'delete': 2, 'links': 6} 34.4s
+wrote /mnt/project-files/prune-regrow/neat_merge.json

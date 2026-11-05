@@ -1,0 +1,80 @@
+seed 0: base acc 0.9759
+/usr/local/lib/python3.13/dist-packages/numpy/lib/_function_base_impl.py:3036: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/usr/local/lib/python3.13/dist-packages/numpy/lib/_function_base_impl.py:3037: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+  merge_only seed 0 round 1: params 1765 acc 0.9759 (cut 0.9685) {'merge': 9, 'delete': 0, 'links': 0} 2.7s
+  merge_only seed 0 round 2: params 1037 acc 0.9630 (cut 0.9648) {'merge': 8, 'delete': 0, 'links': 0} 1.8s
+  merge_only seed 0 round 3: params 740 acc 0.9537 (cut 0.9389) {'merge': 6, 'delete': 1, 'links': 0} 1.5s
+  merge_only seed 0 round 4: params 426 acc 0.9222 (cut 0.8611) {'merge': 4, 'delete': 1, 'links': 0} 1.0s
+  merge_only seed 0 round 5: params 231 acc 0.8315 (cut 0.7704) {'merge': 5, 'delete': 0, 'links': 0} 0.8s
+  merge_only seed 0 round 6: params 145 acc 0.6926 (cut 0.6407) {'merge': 2, 'delete': 0, 'links': 0} 0.4s
+  merge_del seed 0 round 1: params 1765 acc 0.9759 (cut 0.9685) {'merge': 9, 'delete': 0, 'links': 0} 2.8s
+  merge_del seed 0 round 2: params 1067 acc 0.9611 (cut 0.9519) {'merge': 6, 'delete': 5, 'links': 0} 2.4s
+  merge_del seed 0 round 3: params 705 acc 0.9500 (cut 0.9241) {'merge': 3, 'delete': 1, 'links': 0} 0.9s
+  merge_del seed 0 round 4: params 406 acc 0.9093 (cut 0.8519) {'merge': 4, 'delete': 3, 'links': 0} 1.2s
+  merge_del seed 0 round 5: params 264 acc 0.8500 (cut 0.7963) {'merge': 1, 'delete': 1, 'links': 0} 0.6s
+  merge_del seed 0 round 6: params 96 acc 0.5981 (cut 0.4796) {'merge': 2, 'delete': 2, 'links': 0} 0.6s
+  full seed 0 round 1: params 1724 acc 0.9722 (cut 0.9778) {'merge': 6, 'delete': 0, 'links': 4} 3.7s
+  full seed 0 round 2: params 1071 acc 0.9704 (cut 0.9685) {'merge': 2, 'delete': 2, 'links': 9} 4.0s
+  full seed 0 round 3: params 714 acc 0.9722 (cut 0.9648) {'merge': 2, 'delete': 1, 'links': 7} 3.2s
+  full seed 0 round 4: params 449 acc 0.9685 (cut 0.9648) {'merge': 2, 'delete': 3, 'links': 8} 2.8s
+  full seed 0 round 5: params 275 acc 0.9537 (cut 0.9407) {'merge': 0, 'delete': 6, 'links': 6} 2.3s
+  full seed 0 round 6: params 160 acc 0.9130 (cut 0.8944) {'merge': 1, 'delete': 0, 'links': 14} 2.7s
+  no_merge seed 0 round 1: params 1745 acc 0.9685 (cut 0.9722) {'merge': 0, 'delete': 5, 'links': 11} 3.0s
+  no_merge seed 0 round 2: params 1052 acc 0.9759 (cut 0.9759) {'merge': 0, 'delete': 6, 'links': 11} 2.1s
+  no_merge seed 0 round 3: params 710 acc 0.9704 (cut 0.9667) {'merge': 0, 'delete': 5, 'links': 6} 1.5s
+  no_merge seed 0 round 4: params 460 acc 0.9667 (cut 0.9537) {'merge': 0, 'delete': 6, 'links': 7} 1.4s
+  no_merge seed 0 round 5: params 283 acc 0.9519 (cut 0.9167) {'merge': 0, 'delete': 6, 'links': 6} 0.9s
+  no_merge seed 0 round 6: params 161 acc 0.9000 (cut 0.8463) {'merge': 0, 'delete': 4, 'links': 9} 0.8s
+seed 1: base acc 0.9796
+  merge_only seed 1 round 1: params 1752 acc 0.9778 (cut 0.9759) {'merge': 11, 'delete': 0, 'links': 0} 3.5s
+  merge_only seed 1 round 2: params 977 acc 0.9667 (cut 0.9593) {'merge': 10, 'delete': 2, 'links': 0} 2.5s
+  merge_only seed 1 round 3: params 671 acc 0.9481 (cut 0.9333) {'merge': 4, 'delete': 0, 'links': 0} 0.9s
+  merge_only seed 1 round 4: params 459 acc 0.9426 (cut 0.9148) {'merge': 5, 'delete': 0, 'links': 0} 1.0s
+  merge_only seed 1 round 5: params 222 acc 0.8685 (cut 0.8111) {'merge': 4, 'delete': 0, 'links': 0} 1.2s
+  merge_only seed 1 round 6: params 117 acc 0.7296 (cut 0.6593) {'merge': 3, 'delete': 0, 'links': 0} 0.6s
+  merge_del seed 1 round 1: params 1722 acc 0.9741 (cut 0.9722) {'merge': 11, 'delete': 2, 'links': 0} 3.8s
+  merge_del seed 1 round 2: params 1031 acc 0.9630 (cut 0.9537) {'merge': 8, 'delete': 4, 'links': 0} 2.4s
+  merge_del seed 1 round 3: params 722 acc 0.9481 (cut 0.9278) {'merge': 4, 'delete': 0, 'links': 0} 0.8s
+  merge_del seed 1 round 4: params 437 acc 0.9204 (cut 0.8704) {'merge': 1, 'delete': 3, 'links': 0} 0.8s
+  merge_del seed 1 round 5: params 277 acc 0.8870 (cut 0.8389) {'merge': 2, 'delete': 1, 'links': 0} 0.7s
+  merge_del seed 1 round 6: params 160 acc 0.7648 (cut 0.7093) {'merge': 2, 'delete': 2, 'links': 0} 0.6s
+  full seed 1 round 1: params 1688 acc 0.9759 (cut 0.9741) {'merge': 7, 'delete': 0, 'links': 5} 4.4s
+  full seed 1 round 2: params 1085 acc 0.9685 (cut 0.9667) {'merge': 2, 'delete': 0, 'links': 10} 3.4s
+  full seed 1 round 3: params 727 acc 0.9722 (cut 0.9741) {'merge': 2, 'delete': 4, 'links': 5} 3.0s
+  full seed 1 round 4: params 453 acc 0.9630 (cut 0.9500) {'merge': 3, 'delete': 6, 'links': 8} 3.9s
+  full seed 1 round 5: params 277 acc 0.9278 (cut 0.9241) {'merge': 1, 'delete': 2, 'links': 4} 1.6s
+  full seed 1 round 6: params 161 acc 0.8907 (cut 0.8574) {'merge': 1, 'delete': 3, 'links': 11} 2.7s
+  no_merge seed 1 round 1: params 1741 acc 0.9741 (cut 0.9722) {'merge': 0, 'delete': 8, 'links': 11} 3.1s
+  no_merge seed 1 round 2: params 1082 acc 0.9759 (cut 0.9741) {'merge': 0, 'delete': 7, 'links': 7} 2.0s
+  no_merge seed 1 round 3: params 727 acc 0.9778 (cut 0.9759) {'merge': 0, 'delete': 5, 'links': 7} 1.3s
+  no_merge seed 1 round 4: params 444 acc 0.9593 (cut 0.9574) {'merge': 0, 'delete': 7, 'links': 6} 1.3s
+  no_merge seed 1 round 5: params 283 acc 0.9574 (cut 0.9093) {'merge': 0, 'delete': 8, 'links': 5} 1.2s
+  no_merge seed 1 round 6: params 158 acc 0.8815 (cut 0.8556) {'merge': 0, 'delete': 5, 'links': 9} 0.7s
+seed 2: base acc 0.9759
+  merge_only seed 2 round 1: params 1747 acc 0.9796 (cut 0.9759) {'merge': 10, 'delete': 1, 'links': 0} 3.4s
+  merge_only seed 2 round 2: params 976 acc 0.9722 (cut 0.9648) {'merge': 9, 'delete': 2, 'links': 0} 2.3s
+  merge_only seed 2 round 3: params 710 acc 0.9537 (cut 0.9426) {'merge': 3, 'delete': 2, 'links': 0} 1.1s
+  merge_only seed 2 round 4: params 407 acc 0.9241 (cut 0.8556) {'merge': 5, 'delete': 0, 'links': 0} 0.9s
+  merge_only seed 2 round 5: params 264 acc 0.8759 (cut 0.7593) {'merge': 2, 'delete': 0, 'links': 0} 0.5s
+  merge_only seed 2 round 6: params 92 acc 0.3815 (cut 0.3833) {'merge': 2, 'delete': 0, 'links': 0} 0.5s
+  merge_del seed 2 round 1: params 1722 acc 0.9815 (cut 0.9741) {'merge': 9, 'delete': 2, 'links': 0} 3.4s
+  merge_del seed 2 round 2: params 1078 acc 0.9722 (cut 0.9704) {'merge': 6, 'delete': 8, 'links': 0} 2.7s
+  merge_del seed 2 round 3: params 736 acc 0.9704 (cut 0.9593) {'merge': 4, 'delete': 2, 'links': 0} 1.3s
+  merge_del seed 2 round 4: params 442 acc 0.9296 (cut 0.8852) {'merge': 2, 'delete': 2, 'links': 0} 0.9s
+  merge_del seed 2 round 5: params 278 acc 0.8630 (cut 0.7907) {'merge': 2, 'delete': 1, 'links': 0} 0.7s
+  merge_del seed 2 round 6: params 160 acc 0.7815 (cut 0.7148) {'merge': 2, 'delete': 2, 'links': 0} 0.7s
+  full seed 2 round 1: params 1719 acc 0.9741 (cut 0.9722) {'merge': 6, 'delete': 0, 'links': 6} 4.0s
+  full seed 2 round 2: params 1067 acc 0.9741 (cut 0.9759) {'merge': 2, 'delete': 4, 'links': 8} 4.0s
+  full seed 2 round 3: params 730 acc 0.9704 (cut 0.9685) {'merge': 1, 'delete': 3, 'links': 7} 2.9s
+  full seed 2 round 4: params 458 acc 0.9556 (cut 0.9574) {'merge': 1, 'delete': 5, 'links': 8} 3.1s
+  full seed 2 round 5: params 279 acc 0.9315 (cut 0.9148) {'merge': 4, 'delete': 4, 'links': 5} 2.5s
+  full seed 2 round 6: params 160 acc 0.8630 (cut 0.8241) {'merge': 0, 'delete': 3, 'links': 11} 2.3s
+  no_merge seed 2 round 1: params 1722 acc 0.9778 (cut 0.9722) {'merge': 0, 'delete': 4, 'links': 12} 2.7s
+  no_merge seed 2 round 2: params 1075 acc 0.9685 (cut 0.9667) {'merge': 0, 'delete': 9, 'links': 7} 2.2s
+  no_merge seed 2 round 3: params 729 acc 0.9704 (cut 0.9611) {'merge': 0, 'delete': 7, 'links': 5} 1.1s
+  no_merge seed 2 round 4: params 443 acc 0.9574 (cut 0.9500) {'merge': 0, 'delete': 6, 'links': 6} 1.2s
+  no_merge seed 2 round 5: params 283 acc 0.9444 (cut 0.9333) {'merge': 0, 'delete': 3, 'links': 9} 0.9s
+  no_merge seed 2 round 6: params 160 acc 0.8444 (cut 0.7944) {'merge': 0, 'delete': 5, 'links': 9} 0.8s
+wrote /mnt/project-files/prune-regrow/neat_merge.json
