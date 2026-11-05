@@ -20,7 +20,7 @@ def kl(p_log, q_log): return float((p_log.exp() * (p_log - q_log)).sum(1).mean()
 
 
 def importance(g):
-    """Mean-ablation KL on the training set (same measure as the earlier 3D view)."""
+    """Mean-ablation KL on the training set (same measure as the pruning 3D view)."""
     X = D.C.Xtr; cg = D.Compiled(g)
     with torch.no_grad():
         p = F.log_softmax(cg.forward(X), 1); out = {}

@@ -8,7 +8,7 @@ Everything uses the same digits split and the same parameter count (active links
 | student | params | acc % | min–max |
 |---|---|---|---|
 | teacher (original 64-32-32-10) | 3466 | 97.7 | 97.6–98.0 |
-| **bar:** NEAT-merge smallest net, as in the earlier thread | 163 | 91.0 | 88.9–92.4 |
+| **bar:** NEAT-merge smallest net | 163 | 91.0 | 88.9–92.4 |
 | **NEAT from that net, distilled, cap 150** | **149** | **93.3** | 92.8–93.7 |
 | NEAT from that net, distilled, cap 120 | 120 | 91.1 | 89.4–92.2 |
 | NEAT from scratch, distilled, cap 150 | 123 | 91.7 | 91.3–92.0 |
@@ -44,5 +44,5 @@ Everything uses the same digits split and the same parameter count (active links
 - `exp_kd.py`: sanity check of distillation on the fixed 160-parameter network.
 - `summarize.py` writes `summary.json` and prints the table.
 - `run_seed*.json`: main runs at cap 150. `cap120_seed*.json`: cap 120. `hardseed_seed*.json`: the labels-only control. Each NEAT entry stores the winning genome and its per-generation history.
-- `nm160_seed*.json`: the rebuilt 160-parameter NEAT-merge networks. They match the earlier thread exactly (91.67 / 92.41 / 88.89%).
+- `nm160_seed*.json`: the rebuilt 160-parameter NEAT-merge networks. They match the NEAT-merge results exactly (91.67 / 92.41 / 88.89%).
 - `best-student.html` is the 3D replay of the best run (seed 1): the starting network, the cut to 150 parameters, the best network of each of the 40 generations, and the final training. It is built by `record_evolution.py`, which re-runs the run deterministically and saves every generation to `evolution_seed1.json`, and by `export_evolution.py` with `evo_template.html`. The re-run ends on the same network as the original (148 parameters, 93.7%).

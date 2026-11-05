@@ -1,6 +1,11 @@
 # Prune and Regrow
 
-Shrinking a small neural network with pruning, NEAT-style regrowth and knowledge distillation, with interactive 3D replays of every step.
+**Can a neural network get smaller by growing new neurons?** Starting from a trained digits classifier with 3,466 parameters (97.7%):
+
+- **NEAT-merge keeps 91.0% accuracy at 163 parameters, 21× smaller.** Classic weight pruning drops to 49.0% at the same size.
+- **A NEAT-grown student distilled from the original reaches 93.3% at 149 parameters.**
+
+Every step can be replayed in 3D in the browser.
 
 ## ▶ Live demos
 
@@ -11,12 +16,12 @@ Open them in a browser, press **Play**, and drag to rotate the network.
 <td width="50%" align="center">
 <a href="https://aghyada1.github.io/prune-and-regrow/prune-and-regrow.html"><img src="screenshots/pruning-final.png" alt="3D pruning replay"></a><br>
 <b><a href="https://aghyada1.github.io/prune-and-regrow/prune-and-regrow.html">Prune and Regrow →</a></b><br>
-Four pruning methods take a 3,466-parameter network down to ~160, round by round.
+Five pruning methods take the same network from 3,466 parameters down to ~160, round by round.
 </td>
 <td width="50%" align="center">
 <a href="https://aghyada1.github.io/prune-and-regrow/distill/best-student.html"><img src="screenshots/student-final.png" alt="3D distilled NEAT student"></a><br>
 <b><a href="https://aghyada1.github.io/prune-and-regrow/distill/best-student.html">Distilled NEAT student →</a></b><br>
-NEAT evolves a 148-parameter student (93.7%) over 40 generations.
+NEAT evolves a 148-parameter student (93.7%) that learns to copy the original network, over 40 generations.
 </td>
 </tr>
 </table>
@@ -35,11 +40,17 @@ NEAT evolves a 148-parameter student (93.7%) over 40 generations.
 
 ✂️ only removes · 🌱 removes and grows. Start: 3,466 parameters, 97.7%. All numbers are the mean of 3 seeds.
 
-## Setup
+## How NEAT-merge works
 
-A 64-32-32-10 MLP trained on scikit-learn's 8x8 digits is cut down in six rounds. Each method gets the same fine-tuning budget. The test set is 540 images, so one image is 0.19 points and differences under about a point are noise. It is a small, CPU-only study meant to make pruning visible and to test one idea honestly, not a benchmark.
+1. **Merge:** replace a few weak neurons with ONE new neuron. It starts with a single input link and adds links one at a time while they help (NEAT-style growth).
+2. **Re-fit:** re-solve the next layer's weights by least squares, so it still receives almost the same signal as before.
+3. **Choose:** among all possible changes (merge, delete a neuron, trim weak links), apply the one that loses the least accuracy per parameter saved.
 
-The last step distills the original network into a NEAT-grown student under a hard parameter cap (`distill/`).
+**Distillation** (`distill/`): instead of learning only from labels, the small student learns to copy the original network's output probabilities. NEAT chooses the student's wiring under a hard parameter cap.
+
+## Setup and caveats
+
+A 64-32-32-10 MLP on scikit-learn's 8x8 digits, cut down in six rounds with the same fine-tuning budget for every method. The test set is 540 images, so one image is 0.19 points and differences under about a point are noise. This is a small CPU-only study, not a benchmark; the next step would be MNIST and a small CNN.
 
 ## Detailed results
 
@@ -82,16 +93,16 @@ python3 neat_deep.py deep          # NEAT-deep
 cd distill && python3 distill.py 0 1 2 && python3 summarize.py   # ~45 min per seed
 ```
 
-`demo.py` is the first toy experiment (needs matplotlib for `heatmap.png`). Per-seed partial outputs are in `runs/`. The 3D pages are self-contained HTML; they load three.js from a CDN.
+`demo.py` is the first toy experiment (needs matplotlib for `heatmap.png`). Per-seed partial outputs and logs are in `runs/`. The 3D pages are self-contained HTML; they load three.js from a CDN.
 
 ## Layout
 
 ```
 compare.py, neat_merge.py, neat_deep.py   pruning experiments (each imports the one before)
-*.json, *.log                             their results
+*.json                                    their results
 prune-and-regrow.html                     3D replay and write-up of the pruning experiments
 distill/                                  NEAT + distillation, its own README and 3D replay
-runs/                                     per-seed partial outputs
+runs/                                     per-seed partial outputs and run logs
 screenshots/                              stills from the 3D pages
 ```
 
