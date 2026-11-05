@@ -112,9 +112,9 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
 
 <div class="wrap">
 <header class="col" style="display:grid;gap:.8rem">
-  <div class="eyebrow">Research notes · structured pruning × neuroevolution</div>
+  <div class="eyebrow">Visual explainer · pruning × neuroevolution</div>
   <h1>Prune and Regrow</h1>
-  <p class="lede">One trained digits network (3,466 parameters, 97.7%), shrunk five different ways and shown in 3D. <b>Classic pruning only removes</b> weights or neurons. <b>The NEAT methods also grow new neurons</b> that take over the work of the ones they replace. Pick a method below and press Play.</p>
+  <p class="lede">A visual side project: one small trained digits network (3,466 parameters), shrunk five different ways so you can watch how each method works. <b>Classic pruning only removes</b> weights or neurons. <b>The NEAT methods also grow new neurons</b> that take over the work of the ones they replace. Pick a method below and press Play.</p>
 </header>
 
 <section class="viz" aria-labelledby="v-h">
@@ -166,7 +166,7 @@ table.var tr.win td{background:color-mix(in srgb,var(--s4) 12%,transparent)}
   <h2 style="font-size:1.25rem">Key findings</h2>
   <ul>
     <li><b>Each piece exists on its own.</b> Scoring neurons by entropy or by their effect on the output, clustering neurons into modules, replacing a block of a trained network with a cheaper one, and growing networks from one unit are all published.</li>
-    <li><b>The combination looks new.</b> I did not find a paper that picks a low-information region of a trained network and replaces it with a NEAT-style topology grown to imitate that region. The closest are <a href="https://arxiv.org/abs/1906.04113" target="_blank" rel="noopener">BlockSwap</a> (swap blocks for cheaper fixed designs) and <a href="https://arxiv.org/abs/1911.13053" target="_blank" rel="noopener">block-wise distillation NAS</a> (search a replacement per block). Neither grows the replacement from nothing. Absence of evidence is not proof; this was a careful but not exhaustive search.</li>
+    <li><b>Closest published work.</b> <a href="https://arxiv.org/abs/1906.04113" target="_blank" rel="noopener">BlockSwap</a> swaps blocks of a network for cheaper fixed designs, and <a href="https://arxiv.org/abs/1911.13053" target="_blank" rel="noopener">block-wise distillation NAS</a> searches a replacement for each block. The NEAT variants here grow the replacement from a single node instead, which makes the process easy to watch.</li>
     <li><b>The key change I'd make:</b> split “importance” from “replaceability”. A part that barely affects the output should just be deleted or frozen to a constant. Growing a small network pays off for parts that <i>do</i> matter but compute something simple.</li>
     <li><b>Tested against classic pruning, the improved version wins at small sizes.</b> The first NEAT version lost by about 2 points. NEAT-merge, where one grown neuron replaces several old ones and the neurons that stay are re-fitted to take over their work, keeps 96.5% accuracy at about 460 parameters, where deleting small weights keeps 85.6%. Most of that gain comes from the re-fitting; growing new neurons helps most at the very smallest size. Letting NEAT add new hidden layers did not shrink it further. Details and the 3D replay are below.</li>
     <li><b>Measure importance from inputs.</b> Score parts by what happens to the output when you perturb them over many inputs. Training-history signals exist (and work), but they describe the path the optimizer took, not what the finished network uses.</li>

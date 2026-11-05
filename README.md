@@ -1,11 +1,8 @@
 # Prune and Regrow
 
-**Can a neural network get smaller by growing new neurons?** Starting from a trained digits classifier with 3,466 parameters (97.7%):
+A side project to **see** how different ways of shrinking a neural network actually work. Each method is applied to the same small digits network and replayed step by step in 3D, so you can watch which neurons and links get removed, which get grown, and what that does to accuracy.
 
-- **NEAT-merge keeps 91.0% accuracy at 163 parameters, 21× smaller.** Classic weight pruning drops to 49.0% at the same size.
-- **A NEAT-grown student distilled from the original reaches 93.3% at 149 parameters.**
-
-Every step can be replayed in 3D in the browser.
+The goal is understanding and comparison, not a state-of-the-art result. The network and dataset are deliberately tiny so every neuron fits on screen. Even so, the side-by-side comparison shows clear differences: at about 160 parameters, NEAT-merge keeps 91% accuracy where deleting small weights drops to 49%.
 
 ## ▶ Live demos
 
@@ -50,7 +47,7 @@ NEAT evolves a 148-parameter student (93.7%) that learns to copy the original ne
 
 ## Setup and caveats
 
-A 64-32-32-10 MLP on scikit-learn's 8x8 digits, cut down in six rounds with the same fine-tuning budget for every method. The test set is 540 images, so one image is 0.19 points and differences under about a point are noise. This is a small CPU-only study, not a benchmark; the next step would be MNIST and a small CNN.
+A 64-32-32-10 MLP on scikit-learn's 8x8 digits (3,466 parameters, 97.7%), cut down in six rounds with the same fine-tuning budget for every method, so the comparison is fair. The test set is 540 images, so one image is 0.19 points and differences under about a point are noise. It runs on a laptop CPU. The numbers show how the methods behave relative to each other on this toy setup; they are not a benchmark.
 
 ## Detailed results
 
